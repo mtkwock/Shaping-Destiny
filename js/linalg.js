@@ -257,6 +257,12 @@ Segment.prototype = {
         }
 
         return this._wrap(p0, p1);
+    },
+
+    // Returns collision point vector, if any, otherwise returns false
+    collideSegment: function(segment){
+        var seg = this.shortestSegment(segment);
+        return seg.dir.magnitude() === 0 ? seg.points[0] : false;
     }
 };
 
@@ -346,8 +352,24 @@ var vectorTests = function() {
 
     var segCheck2 = s4.shortestSegment(s5);
     assert(segCheck2.dir.magnitude() === 3, "s4 and s5 are 3 units vertically apart");
-    assert(segCheck2.points[0].equals(p0) || segCheck2.points[1].equals(p0), "s4 and s5 goes through 0,0,0");
-    assert(segCheck2.points[1].equals(p8) || segCheck2.points[1].equals(p8), "s4 and s5 goes through 0,0,3");
+    assert(segCheck2.points[0].equals(p0) || segCheck2.points[1].equals(p0), "s4 and s5 segment goes through 0,0,0");
+    assert(segCheck2.points[1].equals(p8) || segCheck2.points[1].equals(p8), "s4 and s5 segment goes through 0,0,3");
+
+    var p9 = new Vector2d(0, 0);
+    var p10 = new Vector2d(2, 2);
+    var p11 = new Vector2d(0, 2);
+    var p12 = new Vector2d(2, 0);
+    var s6 = new Segment(p9, p10);
+    var s7 = new Segment(p11, p12);
+
+    var segCheck3 = s6.shortestSegment(s7);
+    assert(segCheck3.dir.magnitude() === 0, "s6 and s7 should cross");
+    assert(segCheck3.points[0].equals(p10.scale(0.5)), "s6 and s7 should meet at the midpoint of s6");
+
+    var s8 = new Segment(p11.add(p10), p12.add(p10));
+
+    var segCheck4 = s6.shortestSegment(s8);
+    console.log(segCheck4);
 
     if(okay){
         console.log("*** ALL TESTS PASSED ***");
