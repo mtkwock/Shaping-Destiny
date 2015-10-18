@@ -167,8 +167,8 @@ Segment.prototype = {
         return this.dir.magnitude();
     },
     shortestSegment: function(segment){
-        // Algorithm from: http://geomalgorithms.com/a07-_distance.html
         // Returns the shortest segment connecting this segment and another
+        // Algorithm from: http://geomalgorithms.com/a07-_distance.html
         var u = this.dir;
         var v = segment.dir;
 
@@ -218,6 +218,18 @@ Segment.prototype = {
                     segment.dir.scale(
                         p0.sub(segment.points[0]).dot(segment.dir) /
                         segment.dir.dot(segment.dir)
+                    )
+                );
+
+                return this._wrap(p0, p1);
+            }
+
+            if(v.dot(cases[0].dir) * v.dot(cases[1].dir) <= 0){
+                var p0 = segment.points[0];
+                var p1 = this.points[0].add(
+                    this.dir.scale(
+                        p0.sub(this.points[0]).dot(this.dir) /
+                        this.dir.dot(this.dir)
                     )
                 );
 
@@ -275,14 +287,16 @@ var vectorTests = function() {
     var e = new Vector2d(3, 4);
     var f = new Vector([1, 1, 1, 1]);
 
-    var okay = true;
+    var succeeded = 0;
+    var failed = 0;
 
     var assert = function(truth, expected) {
         if (!truth) {
-            okay = false;
+            failed++;
             console.error("FAILED: " + expected || "FAILED: Failed Assertion");
         }
         else{
+            succeeded++;
             console.log("PASSED: " + expected || "PASSED: Anonymous test");
         }
     };
@@ -371,8 +385,15 @@ var vectorTests = function() {
     var segCheck4 = s6.shortestSegment(s8);
     console.log(segCheck4);
 
-    if(okay){
+    console.log("Total Passed: " + succeeded);
+    console.log("Total Failed: " + failed);
+
+    if(failed === 0){
         console.log("*** ALL TESTS PASSED ***");
+        return true;
     }
-    return okay;
+    else{
+        console.error("*** FAILURES FOUND ***");
+        return false;
+    }
 };
