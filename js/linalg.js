@@ -296,10 +296,10 @@ var vectorTests = function() {
     assert(e.scale(2).angle() === e.angle(), "arg(e) = arg(2e)")
     assert(e.unit() instanceof Vector2d, "e.unit() should be Vector2d");
 
-    var a3 = new Vector3d(1, 0, 0);
-    var b3 = new Vector3d(0, 1, 0);
-    var c3 = new Vector3d(0, 0, 1);
-    var d3 = new Vector([0, 0, 2]);
+    var a3 = new Vector3d(2, 0, 0);
+    var b3 = new Vector3d(0, 2, 0);
+    var c3 = new Vector3d(0, 0, 4);
+    var d3 = new Vector([0, 0, 8]);
     assert(a3.dot(b3) === 0, "a3 and b3 are perpendicular");
     assert(a3.cross(b3).equals(c3), "a3 x b3 = c3");
     assert(b3.cross(a3).equals(c3.scale(-1)), "b3 x a3 = -c3");
@@ -334,8 +334,23 @@ var vectorTests = function() {
     var segCheck1 = s2.shortestSegment(s3);
     assert(segCheck1.dir.magnitude() === Math.sqrt(3), "Segment should have length sqrt(3)");
 
+    var p4 = new Vector3d(-1, 0, 0);
+    var p5 = new Vector3d(10, 0, 0);
+    var p6 = new Vector3d(0, 2, 3);
+    var p7 = new Vector3d(0, -8, 3);
+
+    var s4 = new Segment(p4, p5);
+    var s5 = new Segment(p6, p7);
+
+    var p8 = new Vector([0, 0, 3]);
+
+    var segCheck2 = s4.shortestSegment(s5);
+    assert(segCheck2.dir.magnitude() === 3, "s4 and s5 are 3 units vertically apart");
+    assert(segCheck2.points[0].equals(p0) || segCheck2.points[1].equals(p0), "s4 and s5 goes through 0,0,0");
+    assert(segCheck2.points[1].equals(p8) || segCheck2.points[1].equals(p8), "s4 and s5 goes through 0,0,3");
+
     if(okay){
-        console.log("All is good");
+        console.log("*** ALL TESTS PASSED ***");
     }
     return okay;
 };
