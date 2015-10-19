@@ -224,7 +224,7 @@ Segment.prototype = {
                 return this._wrap(p0, p1);
             }
 
-            if(v.dot(cases[0].dir) * v.dot(cases[1].dir) <= 0){
+            if(v.dot(cases[0].dir) * v.dot(cases[2].dir) <= 0){
                 var p0 = segment.points[0];
                 var p1 = this.points[0].add(
                     this.dir.scale(
@@ -249,24 +249,13 @@ Segment.prototype = {
         var mulB = (a * e - b * d)/den;
         var p0, p1;
 
-        if(mulA <= 0){
-            p0 = this.points[0];
-        }
-        else if(mulA >= 1){
-            p0 = this.points[1];
-        }
-        else {
-            p0 = this.points[0].add(u.scale(mulA));
-        }
-        if(mulB <= 0){
-            p1 = segment.points[0];
-        }
-        else if(mulB >= 1){
-            p1 = segment.points[1];
-        }
-        else {
-            p1 = segment.points[0].add(v.scale(mulB));
-        }
+        if(mulA <= 0){p0 = this.points[0];}
+        else if(mulA >= 1){ p0 = this.points[1]; }
+        else { p0 = this.points[0].add(u.scale(mulA)); }
+
+        if(mulB <= 0){ p1 = segment.points[0]; }
+        else if(mulB >= 1){ p1 = segment.points[1]; }
+        else { p1 = segment.points[0].add(v.scale(mulB)); }
 
         return this._wrap(p0, p1);
     },
