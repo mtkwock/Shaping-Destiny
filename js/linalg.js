@@ -84,6 +84,18 @@ Vector.prototype = {
         }
         return Math.acos(normDot);
     },
+    to2d: function(){
+        if(this._dim === 2){
+            return new Vector2d(this._val[0], this._val[1]);
+        }
+        return false;
+    },
+    to3d: function(){
+        if(this._dim === 3){
+            return new Vector3d(this._val[0], this._val[1], this._val[2]);
+        }
+        return false;
+    }
 };
 
 var Vector2d = function(x, y) {
@@ -147,6 +159,17 @@ Vector3d.prototype.cross = function(vec3d) {
 Vector3d.prototype.perpendicular = function(vec3d){
     this._check(vec3d);
     return this.cross(vec3d).unit();
+};
+
+var Ray = function(p0, dir){
+    p0 = p0 instanceof Array ? new Vector(p0) : p0;
+    dir = dir instanceof Array ? new Vector(dir).unit() : dir.unit();
+
+    p0._check(dir);
+
+    this.point = p0;
+    this.dir = dir;
+    this._dim = p0._dim;
 };
 
 var Segment = function(p0, p1){
@@ -265,6 +288,47 @@ Segment.prototype = {
         var seg = this.shortestSegment(segment);
         return seg.dir.magnitude() === 0 ? seg.points[0] : false;
     }
+};
+
+var Triangle = function(p0, p1, p2){
+    p0._check(p1);
+    p0._check(p2);
+
+    this.points = [p0, p1, p2];
+    this._dim = p0._dim;
+    this.v1 = p1.sub(p0);
+    this.v2 = p2.sub(p0);
+};
+
+Triangle.constructor = Triangle;
+Triangle.prototype = {
+    _wrap: function(p0, p1, p2){
+        return new Triangle(p0, p1, p2);
+    },
+    area: function(){
+        var a = this.v1.magnitude();
+        var b = this.v2.magnitude();
+        var c = this.v2.sub(this.v1).magnitude();
+        var s = (a + b + c) / 2;
+        // Heron's Formula
+        return Math.sqrt(s * (s-a) * (s-b) * (s-c));
+    },
+    getNormal: function(){
+        // Calculated by using right hand rule.
+        // only works in 3D
+        if(this._dim !== 3){
+            return false;
+        }
+        return v1.to3d().cross(v2.to3d()).unit();
+    },
+    reverseNormal: function(){
+        // Reverses ordering of points.  Same triangle, though
+        return this._wrap(this.points[2], this.points[1], this.points[0]);
+    },
+    contains: function(point){
+        return placeholder();
+    }
+
 };
 
 var vectorTests = function() {
