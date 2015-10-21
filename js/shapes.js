@@ -1,27 +1,29 @@
+// An Entity is anything that is drawn in the world
+//  whether it be an item chest, a shape, a wall, or a gnat
+//  it is an Entity
 var Entity = function(parent){
-    if(parent){
-        this.parent = parent;
-    }
-    this.position = new Vector2d([-1, -1]);
-    this.direction = new Vector2d([1, 0]); // Must be unit vector
-    this.segments = [];
-    this._dead = false; // Checked later.  If dead,
+    this.parent = parent;
+    this.position = false;
+    this.direction = new Vector2d([1, 0]); // Must be unit vector.  Defines Orientation
+    this._active = false; // Checked later.  If dead,
 };
 
 Entity.constructor = Entity;
 Entity.prototype = {
-    _update: function(dTime){
-        // Function called by the updater.  Not changed
-
-    },
-    updateAlive: function(dTime){
-
-    },
-    updateDead: function(dTime){
-
+    update: function(dTime){
+        // Function called by the updater.
     },
     positionSet: function(vec2d){
         this.position = vec2d;
+    },
+    positionGetAbsolute: function(){
+        if(this.parent){
+            return
+        }
+        return this.position;
+    },
+    positionGetRelative: function(){
+        return this.position;
     },
     positionAdd: function(vec2d){
 
@@ -45,3 +47,16 @@ Entity.prototype = {
         console.log("Mouse left");
     }
 };
+
+
+var EntityShape = function(){
+
+};
+
+var EntityItem = function(){
+
+};
+
+var EntityEquipment = function(){
+
+}
